@@ -1,0 +1,78 @@
+x,y,given,cmi_nats,g_stat,dof,p_value
+listing_price,body_type,"brand_segment, engine_power_hp, overall_condition_score, vehicle_age",0.04510061462160568,6862.599722052763,792,0.0
+listing_price,fuel_type,"brand_segment, engine_power_hp, overall_condition_score, vehicle_age",0.03922671015629727,5968.814670802505,1056,0.0
+body_type,brand_segment,urban_rural,0.03859931414074159,5873.348838283521,9,0.0
+brand_segment,body_type,,0.03858825968514971,5871.66677021175,3,0.0
+listing_price,odometer_km,"brand_segment, engine_power_hp, overall_condition_score, vehicle_age",0.0341929894970615,5202.873667851873,528,0.0
+odometer_km,number_of_previous_owners,"urban_rural, vehicle_age",0.013987488044739664,2128.364155863677,72,0.0
+number_of_previous_owners,odometer_km,vehicle_age,0.0136564217267787,2077.9884427901006,24,0.0
+listing_price,number_of_previous_owners,"brand_segment, engine_power_hp, overall_condition_score, vehicle_age",0.01259769064813245,1916.8898044011298,792,7.849809162139312e-95
+body_type,fuel_type,urban_rural,0.012239263501232596,1862.3508128745543,36,0.0
+fuel_type,body_type,,0.01209914604448349,1841.0302604206968,12,0.0
+overall_condition_score,number_of_previous_owners,"accident_history, odometer_km, service_history_quality, vehicle_age",0.007860622060045872,1196.0879739007,426,2.8477549604953094e-74
+overall_condition_score,fuel_type,"accident_history, odometer_km, service_history_quality, vehicle_age",0.0031444265336630023,478.46223021522974,568,0.9973687893070471
+overall_condition_score,body_type,"accident_history, odometer_km, service_history_quality, vehicle_age",0.0021917873397861386,333.5067451965384,426,0.9996741390627082
+listing_price,service_history_quality,"brand_segment, engine_power_hp, overall_condition_score, vehicle_age",0.0021740414230613124,330.8064910158554,528,0.9999999999989458
+listing_price,urban_rural,"brand_segment, engine_power_hp, overall_condition_score, vehicle_age",0.002081948578301457,316.79345957150633,528,0.9999999999999881
+overall_condition_score,engine_power_hp,"accident_history, odometer_km, service_history_quality, vehicle_age",0.0016116584011983573,245.23316564314445,284,0.9534084952668909
+overall_condition_score,urban_rural,"accident_history, odometer_km, service_history_quality, vehicle_age",0.0013366359728064952,203.38520289418193,284,0.9999080797454309
+engine_power_hp,number_of_previous_owners,"body_type, brand_segment, fuel_type",0.0012420387837792258,188.99110541741456,192,0.547870412421583
+engine_power_hp,vehicle_age,"body_type, brand_segment, fuel_type",0.0012029272412559984,183.03981488399523,192,0.6665466614522175
+listing_price,accident_history,"brand_segment, engine_power_hp, overall_condition_score, vehicle_age",0.001192697504006732,181.48323760467235,264,0.9999712846698726
+brand_segment,fuel_type,,0.001077859546266916,164.00926427906649,4,2.0181019428180602e-34
+engine_power_hp,service_history_quality,"body_type, brand_segment, fuel_type",0.0008242904225323964,125.4256792733745,128,0.54785116253919
+engine_power_hp,odometer_km,"body_type, brand_segment, fuel_type",0.0008079963430195877,122.94633954654651,128,0.6096044555844533
+overall_condition_score,brand_segment,"accident_history, odometer_km, service_history_quality, vehicle_age",0.000735807487441754,111.96193890411216,142,0.9703542430523947
+engine_power_hp,overall_condition_score,"body_type, brand_segment, fuel_type",0.0007176380856595105,109.19724639012243,128,0.884151109957466
+service_history_quality,fuel_type,"number_of_previous_owners, vehicle_age",0.0007034903371696948,107.04449668441511,104,0.39928155436729207
+odometer_km,fuel_type,"urban_rural, vehicle_age",0.0006532039904037652,99.39282558781771,96,0.38589811730872803
+engine_power_hp,urban_rural,"body_type, brand_segment, fuel_type",0.0006408743040706458,97.5167158559976,128,0.9792819695694234
+odometer_km,body_type,"urban_rural, vehicle_age",0.0005925524981666331,90.16397322603123,72,0.07257791145213026
+service_history_quality,body_type,"number_of_previous_owners, vehicle_age",0.00045864488800201385,69.78832344816243,78,0.7350538618067597
+accident_history,number_of_previous_owners,"odometer_km, vehicle_age",0.0004377266845258175,66.60536777081744,36,0.0014314587374780325
+odometer_km,engine_power_hp,"urban_rural, vehicle_age",0.0004146585956150417,63.095281225975974,48,0.0707776015586665
+service_history_quality,urban_rural,"number_of_previous_owners, vehicle_age",0.00040344414990099595,61.38886873723535,52,0.17490997346911455
+number_of_previous_owners,accident_history,vehicle_age,0.00039464724292669317,60.05031377821149,12,2.2101747233671704e-08
+service_history_quality,engine_power_hp,"number_of_previous_owners, vehicle_age",0.0003855338071075142,58.663595157093575,52,0.24440976824304372
+engine_power_hp,accident_history,"body_type, brand_segment, fuel_type",0.00036228258528574404,55.12564274224938,64,0.777630340536828
+odometer_km,service_history_quality,"urban_rural, vehicle_age",0.000311579166633322,47.41050915325954,48,0.4969021971018871
+accident_history,fuel_type,"odometer_km, vehicle_age",0.0002927696224125912,44.5484112855447,48,0.6150744429334747
+service_history_quality,odometer_km,"number_of_previous_owners, vehicle_age",0.0002877503956649084,43.78467570516379,52,0.7840859495834007
+number_of_previous_owners,fuel_type,vehicle_age,0.00023182774639698452,35.275373547257956,48,0.9139636782838804
+body_type,number_of_previous_owners,urban_rural,0.00022094161981270826,33.618918753941315,27,0.1774064334040584
+accident_history,body_type,"odometer_km, vehicle_age",0.00021371511490687187,32.51931931445944,36,0.6349166329834988
+body_type,vehicle_age,urban_rural,0.00020023364138795275,30.467951340873668,27,0.2935426070577322
+accident_history,engine_power_hp,"odometer_km, vehicle_age",0.00017727094519738633,26.9739015631247,24,0.30567116370928205
+service_history_quality,brand_segment,"number_of_previous_owners, vehicle_age",0.0001631563756841928,24.826200436858144,26,0.5288296988946266
+accident_history,urban_rural,"odometer_km, vehicle_age",0.0001584128138248222,24.104410577212597,24,0.45563989764728136
+vehicle_age,body_type,,0.0001385875385311384,21.08775703797508,9,0.012266416039814314
+number_of_previous_owners,body_type,vehicle_age,0.00013541007321804229,20.60426756100375,36,0.9814393065219208
+body_type,overall_condition_score,urban_rural,0.00013045069616099002,19.849638829248562,18,0.3413482548224244
+odometer_km,brand_segment,"urban_rural, vehicle_age",0.00012751926029044508,19.403585684314702,24,0.7301376166078457
+body_type,service_history_quality,urban_rural,0.00012449378038422755,18.943222610824833,18,0.3953276486852954
+service_history_quality,accident_history,"number_of_previous_owners, vehicle_age",0.00012307563344810072,18.727434536729902,26,0.8477288797976472
+accident_history,brand_segment,"odometer_km, vehicle_age",0.00011496711367182041,17.493625950531538,12,0.1319530432466164
+fuel_type,number_of_previous_owners,,0.00011453726292564425,17.42821900129188,12,0.1341866654465369
+accident_history,service_history_quality,"odometer_km, vehicle_age",0.00011435613824667091,17.40065870788994,24,0.8310784452420805
+body_type,odometer_km,urban_rural,0.00010684400806611018,16.257597955355457,18,0.5745749009321363
+number_of_previous_owners,urban_rural,vehicle_age,0.00010295405477608013,15.665694882837904,24,0.8997630647028193
+fuel_type,vehicle_age,,9.275740226132553e-05,14.114151842887816,12,0.2934782419859793
+number_of_previous_owners,engine_power_hp,vehicle_age,9.193258249539446e-05,13.988645617664211,24,0.9469064063936833
+urban_rural,service_history_quality,,8.56283713854017e-05,13.029384246745492,4,0.011133106197616026
+body_type,accident_history,urban_rural,6.548609615649145e-05,9.964495363364051,9,0.3533671673508057
+fuel_type,overall_condition_score,,6.516597788874027e-05,9.915785527506497,8,0.2709865167066309
+fuel_type,service_history_quality,,5.0752508507583424e-05,7.722603199530909,8,0.46102544583122596
+fuel_type,urban_rural,,4.163258383570547e-05,6.334897221608617,8,0.6097731828506441
+fuel_type,accident_history,,4.1419066001368194e-05,6.302407920900187,4,0.1776738776198166
+number_of_previous_owners,brand_segment,vehicle_age,4.005648603025761e-05,6.095075027336058,12,0.9112136483308276
+fuel_type,odometer_km,,3.383175779663642e-05,5.14790792985179,8,0.7416569105035811
+vehicle_age,engine_power_hp,,2.7426906457536813e-05,4.173332940391717,6,0.6532327185686397
+brand_segment,accident_history,,2.4286170616191555e-05,3.6954322933009394,1,0.05456164187554742
+urban_rural,number_of_previous_owners,,2.1594592910455745e-05,3.285876446440767,6,0.7722049483850559
+urban_rural,vehicle_age,,1.5381276931125886e-05,2.340445860393977,6,0.8858795545436294
+brand_segment,service_history_quality,,1.3282783638455593e-05,2.02113492399468,2,0.36401235777246044
+brand_segment,overall_condition_score,,1.2530365478347273e-05,1.9066454719162778,2,0.3854581177082429
+brand_segment,urban_rural,,9.958507989903796e-06,1.5153064927597413,2,0.4687652136770275
+brand_segment,vehicle_age,,5.910766485497211e-06,0.8993940499662266,3,0.8255740362844919
+brand_segment,number_of_previous_owners,,4.156143902756094e-06,0.6324071685311727,3,0.8889750466368445
+brand_segment,odometer_km,,1.7164412447918832e-06,0.2611771326900225,2,0.8775787655630487

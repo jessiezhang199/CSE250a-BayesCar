@@ -1,0 +1,4 @@
+split,rows,complete_rows,retained_pct
+train,80000,76081,95.1
+val,10000,9482,94.82
+test,10000,9474,94.74

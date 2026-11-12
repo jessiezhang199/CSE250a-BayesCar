@@ -1,0 +1,28 @@
+{
+  "target": "listing_price",
+  "max_parents": 4,
+  "alpha": 1.0,
+  "missing_rule": "complete_case",
+  "hc_restart_seeds": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+  "expert_dag": [
+    ["brand_segment", "engine_power_hp"],
+    ["body_type", "engine_power_hp"],
+    ["fuel_type", "engine_power_hp"],
+    ["urban_rural", "body_type"],
+    ["urban_rural", "odometer_km"],
+    ["vehicle_age", "odometer_km"],
+    ["vehicle_age", "number_of_previous_owners"],
+    ["vehicle_age", "accident_history"],
+    ["odometer_km", "accident_history"],
+    ["vehicle_age", "service_history_quality"],
+    ["number_of_previous_owners", "service_history_quality"],
+    ["vehicle_age", "overall_condition_score"],
+    ["odometer_km", "overall_condition_score"],
+    ["accident_history", "overall_condition_score"],
+    ["service_history_quality", "overall_condition_score"],
+    ["brand_segment", "listing_price"],
+    ["engine_power_hp", "listing_price"],
+    ["vehicle_age", "listing_price"],
+    ["overall_condition_score", "listing_price"]
+  ]
+}
