@@ -2,6 +2,8 @@
 
 CSE 250A final project. We model vehicle listing price tiers with a discrete Bayesian network on the Kaggle [Cars Dataset (2026)](https://www.kaggle.com/datasets/datascikhan/cars-dataset), which is 100,000 synthetic records. Results describe this synthetic dataset only, not real-market or causal relationships.
 
+Who does what is in [WORK_SPLIT.md](WORK_SPLIT.md).
+
 ## Layout
 
 | Path | Contents |
