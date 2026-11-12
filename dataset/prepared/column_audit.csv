@@ -1,0 +1,15 @@
+column,dtype,observed,distinct,missing_pct
+brand_segment,object,100000,2,0.0
+body_type,object,100000,9,0.0
+fuel_type,object,100000,5,0.0
+engine_power_hp,float64,100000,5868,0.0
+vehicle_age,int64,100000,16,0.0
+odometer_km,int64,100000,71390,0.0
+number_of_previous_owners,int64,100000,9,0.0
+accident_history,int64,100000,2,0.0
+service_history_quality,object,96000,3,4.0
+overall_condition_score,float64,99000,847,1.0
+urban_rural,object,100000,3,0.0
+listing_price,float64,100000,97568,0.0
+demand_category,object,98000,3,2.0
+days_on_market,float64,98000,180,2.0

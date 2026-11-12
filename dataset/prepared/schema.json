@@ -1,0 +1,128 @@
+{
+  "seed": 42,
+  "columns": {
+    "brand_segment": {
+      "states": [
+        "Mass Market",
+        "Premium"
+      ]
+    },
+    "body_type": {
+      "states": [
+        "Other",
+        "Pickup",
+        "SUV",
+        "Sedan"
+      ]
+    },
+    "fuel_type": {
+      "states": [
+        "Diesel",
+        "Electric",
+        "Hybrid",
+        "Petrol",
+        "Plug-in Hybrid"
+      ]
+    },
+    "accident_history": {
+      "states": [
+        0,
+        1
+      ]
+    },
+    "service_history_quality": {
+      "states": [
+        "Full History",
+        "No History",
+        "Partial History"
+      ]
+    },
+    "urban_rural": {
+      "states": [
+        "Rural",
+        "Suburban",
+        "Urban"
+      ]
+    },
+    "vehicle_age": {
+      "states": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "cut_points": [
+        2,
+        5,
+        10
+      ],
+      "right_closed": true
+    },
+    "number_of_previous_owners": {
+      "states": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "cut_points": [
+        0,
+        1,
+        2
+      ],
+      "right_closed": true
+    },
+    "engine_power_hp": {
+      "states": [
+        0,
+        1,
+        2
+      ],
+      "cut_points": [
+        198.5,
+        290.3
+      ],
+      "right_closed": true
+    },
+    "odometer_km": {
+      "states": [
+        0,
+        1,
+        2
+      ],
+      "cut_points": [
+        34571.0,
+        93617.33333333328
+      ],
+      "right_closed": true
+    },
+    "overall_condition_score": {
+      "states": [
+        0,
+        1,
+        2
+      ],
+      "cut_points": [
+        70.5,
+        87.7
+      ],
+      "right_closed": true
+    },
+    "listing_price": {
+      "states": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "cut_points": [
+        3836.7340000000004,
+        9214.156,
+        15930.070000000002,
+        26904.384000000002
+      ],
+      "right_closed": true
+    }
+  }
+}
