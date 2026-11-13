@@ -1,0 +1,16 @@
+{
+  "source": "https://www.kaggle.com/datasets/datascikhan/cars-dataset",
+  "raw_sha256": "63b9129f812e4f661ecbbd271e6d5536eff0e58b57367567292aeb8a4016e239",
+  "raw_rows": 100000,
+  "verified_model_cells": 1200000,
+  "alignment": "All encoded model cells, missingness and source_row checked against prepared splits",
+  "use": "Post-hoc evaluation only; never training, initialization or model selection",
+  "grade_counts": {
+    "A": 38679,
+    "B": 27975,
+    "C": 19214,
+    "D": 10090,
+    "E": 3042,
+    "NaN": 1000
+  }
+}
