@@ -1,0 +1,17 @@
+{
+  "expert": {
+    "seed": 2,
+    "converged": true,
+    "criterion": "highest validation observed-data log-likelihood; no grade labels"
+  },
+  "hill_climb_bic": {
+    "seed": 2,
+    "converged": true,
+    "criterion": "highest validation observed-data log-likelihood; no grade labels"
+  },
+  "latent_H3": {
+    "seed": 1,
+    "converged": true,
+    "criterion": "highest validation observed-data log-likelihood; no grade labels"
+  }
+}

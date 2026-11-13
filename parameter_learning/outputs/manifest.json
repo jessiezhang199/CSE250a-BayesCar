@@ -1,0 +1,69 @@
+{
+  "upstream_commit": "d0446966a9ed62b77807999dcd80e76d0df5edcb",
+  "config": {
+    "alpha": 1.0,
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "max_iter": 6000,
+    "tol": 1e-07,
+    "latent_cardinality": 3,
+    "selection": "highest validation observed-data log-likelihood; no grade labels",
+    "latent_graph": {
+      "base": "expert",
+      "remove_edges": [
+        [
+          "service_history_quality",
+          "overall_condition_score"
+        ],
+        [
+          "overall_condition_score",
+          "listing_price"
+        ]
+      ],
+      "add_edges": [
+        [
+          "H",
+          "accident_history"
+        ],
+        [
+          "H",
+          "service_history_quality"
+        ],
+        [
+          "H",
+          "overall_condition_score"
+        ],
+        [
+          "H",
+          "listing_price"
+        ]
+      ],
+      "rationale": "A root latent factor with multiple observed indicators. Removing service->score keeps at most four parents; replacing score->price makes price a separate latent indicator. This is an explicitly different E3 graph, not a causal claim."
+    }
+  },
+  "python": "3.11.9 (tags/v3.11.9:de54cf5, Apr  2 2024, 10:12:12) [MSC v.1938 64 bit (AMD64)]",
+  "platform": "Windows-10-10.0.22631-SP0",
+  "numpy": "2.2.6",
+  "pandas": "2.2.3",
+  "elapsed_seconds": 80.86859370000093,
+  "rows": {
+    "train": 80000,
+    "val": 10000,
+    "test": 10000
+  },
+  "input_sha256": {
+    "dataset\\prepared\\train.csv": "aa7270e247857be84cb497cada16a149357121db90cf3344ff22c4ff1a612e8f",
+    "dataset\\prepared\\val.csv": "8c3bf3f47bd47893e00437fa37674ec7d5dc85e9fa4a4c135c72f5a6ae33331a",
+    "dataset\\prepared\\test.csv": "e81df6619694f6633f12299bbf5f2aee581a3745ef74037b83d365d8b32ebc95",
+    "dataset\\prepared\\schema.json": "e1f53b9e04f923eb26cadcea1d3d1f527c6e9ae6b78a7accb2ee385666522707",
+    "structure\\outputs\\dags.json": "92ab4e38149cbd4d29a2f1feca84a07a4c5845dae0f5aab5fdc0958e4d1d5c2a",
+    "parameter_learning\\config.json": "81eba4622b83cf835f51df284bd051acffa5a89fb3f8ddae5f545d9ba249882c",
+    "parameter_learning\\labels\\provenance.json": "fbe748660c8b862897a8fd7b46d679f00aa5d7866aea6a5f06e94a5138195bc2",
+    "parameter_learning\\labels\\train.csv": "a5a9d76c0cdbbba52d88e03811c03af853c31abbb3fc82ebd9ccf74f33a6fefc",
+    "parameter_learning\\labels\\val.csv": "87ef26603be2d9578265d40a048295e7885a00fd9ab32d388d841711e3c60835",
+    "parameter_learning\\labels\\test.csv": "67cf5744e0e11e7ec470a721274d839f410d4442bdbc6e64b5ffc998ce98ac86"
+  }
+}

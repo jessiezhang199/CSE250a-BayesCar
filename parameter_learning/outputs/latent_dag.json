@@ -1,0 +1,93 @@
+{
+  "parents": {
+    "brand_segment": [],
+    "body_type": [
+      "urban_rural"
+    ],
+    "fuel_type": [],
+    "accident_history": [
+      "H",
+      "odometer_km",
+      "vehicle_age"
+    ],
+    "service_history_quality": [
+      "H",
+      "number_of_previous_owners",
+      "vehicle_age"
+    ],
+    "urban_rural": [],
+    "vehicle_age": [],
+    "number_of_previous_owners": [
+      "vehicle_age"
+    ],
+    "engine_power_hp": [
+      "body_type",
+      "brand_segment",
+      "fuel_type"
+    ],
+    "odometer_km": [
+      "urban_rural",
+      "vehicle_age"
+    ],
+    "overall_condition_score": [
+      "H",
+      "accident_history",
+      "odometer_km",
+      "vehicle_age"
+    ],
+    "listing_price": [
+      "H",
+      "brand_segment",
+      "engine_power_hp",
+      "vehicle_age"
+    ],
+    "H": []
+  },
+  "cardinality": {
+    "brand_segment": 2,
+    "body_type": 4,
+    "fuel_type": 5,
+    "accident_history": 2,
+    "service_history_quality": 3,
+    "urban_rural": 3,
+    "vehicle_age": 4,
+    "number_of_previous_owners": 4,
+    "engine_power_hp": 3,
+    "odometer_km": 3,
+    "overall_condition_score": 3,
+    "listing_price": 5,
+    "H": 3
+  },
+  "specification": {
+    "base": "expert",
+    "remove_edges": [
+      [
+        "service_history_quality",
+        "overall_condition_score"
+      ],
+      [
+        "overall_condition_score",
+        "listing_price"
+      ]
+    ],
+    "add_edges": [
+      [
+        "H",
+        "accident_history"
+      ],
+      [
+        "H",
+        "service_history_quality"
+      ],
+      [
+        "H",
+        "overall_condition_score"
+      ],
+      [
+        "H",
+        "listing_price"
+      ]
+    ],
+    "rationale": "A root latent factor with multiple observed indicators. Removing service->score keeps at most four parents; replacing score->price makes price a separate latent indicator. This is an explicitly different E3 graph, not a causal claim."
+  }
+}
