@@ -4,6 +4,15 @@ CSE 250A final project. We model vehicle listing price tiers with a discrete Bay
 
 Who does what is in [WORK_SPLIT.md](WORK_SPLIT.md).
 
+## Part C: parameter learning and E3
+
+Smoothed MLE, reusable exact missing-data EM, three-state latent H experiments,
+fitted CPTs and convergence diagnostics are in [`parameter_learning/`](parameter_learning/README.md).
+The [Part C report](parameter_learning/REPORT.md) includes measured results and
+limitations. All nine EM fits converge; the chosen latent graph does not improve
+held-out likelihood. A can run the E2 integration example with
+`python -m parameter_learning.e2_handoff --rate 0.2 --seed 0`.
+
 ## Layout
 
 | Path | Contents |
