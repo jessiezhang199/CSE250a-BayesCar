@@ -1,0 +1,7 @@
+split,variable,paired_rows,nmi_with_grade
+val,overall_condition_score,9791,0.7197529594478116
+val,vehicle_age,9900,0.3816705070640691
+val,listing_price,9900,0.24434461281877765
+test,overall_condition_score,9816,0.7193676300294614
+test,vehicle_age,9917,0.38104637282893933
+test,listing_price,9917,0.24652208829422187

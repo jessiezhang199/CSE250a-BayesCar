@@ -1,0 +1,22 @@
+{
+  "alpha": 1.0,
+  "seeds": [0, 1, 2],
+  "max_iter": 6000,
+  "tol": 1e-7,
+  "latent_cardinality": 3,
+  "selection": "highest validation observed-data log-likelihood; no grade labels",
+  "latent_graph": {
+    "base": "expert",
+    "remove_edges": [
+      ["service_history_quality", "overall_condition_score"],
+      ["overall_condition_score", "listing_price"]
+    ],
+    "add_edges": [
+      ["H", "accident_history"],
+      ["H", "service_history_quality"],
+      ["H", "overall_condition_score"],
+      ["H", "listing_price"]
+    ],
+    "rationale": "A root latent factor with multiple observed indicators. Removing service->score keeps at most four parents; replacing score->price makes price a separate latent indicator. This is an explicitly different E3 graph, not a causal claim."
+  }
+}

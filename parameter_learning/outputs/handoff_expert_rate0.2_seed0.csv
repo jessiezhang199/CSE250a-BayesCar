@@ -1,0 +1,4 @@
+method,mask_seed,additional_mask_rate,structure,val_observed_ll_per_row,service_history_quality_hidden_accuracy,overall_condition_score_hidden_accuracy
+em,0,0.2,expert,-10.87660075334717,0.44895576598780645,0.7382622432859399
+complete_case_mle,0,0.2,expert,-10.877733002895937,0.44908548449863794,0.7388941548183254
+mode_mle,0,0.2,expert,-10.975282737164692,0.4483720326890647,0.7265086887835703
