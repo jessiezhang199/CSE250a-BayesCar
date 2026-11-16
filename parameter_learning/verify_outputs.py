@@ -20,7 +20,7 @@ def hash_file(path):
 def verify():
     manifest = json.loads((OUT / "manifest.json").read_text())
     for relative, expected in manifest["input_sha256"].items():
-        assert hash_file(ROOT / relative) == expected, f"Input changed: {relative}"
+        assert hash_file(ROOT / relative.replace("\\", "/")) == expected, f"Input changed: {relative}"
     runs = pd.read_csv(OUT / "restarts.csv")
     assert len(runs) == 9 and runs.converged.all()
     selected = json.loads((OUT / "selection.json").read_text())

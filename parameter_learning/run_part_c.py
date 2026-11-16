@@ -233,7 +233,7 @@ def run(output=None):
                 "python": sys.version, "platform": platform.platform(), "numpy": np.__version__,
                 "pandas": pd.__version__, "elapsed_seconds": time.perf_counter() - started,
                 "rows": {s: len(f) for s, f in data.items()},
-                "input_sha256": {str(p.relative_to(ROOT)): hash_file(p) for p in inputs}}
+                "input_sha256": {p.relative_to(ROOT).as_posix(): hash_file(p) for p in inputs}}
     (out / "manifest.json").write_text(json.dumps(manifest, indent=2), newline="\n")
     print(pd.DataFrame(summary).to_string(index=False), flush=True)
     print(group.to_string(), flush=True)
