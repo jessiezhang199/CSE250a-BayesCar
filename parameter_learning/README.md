@@ -1,4 +1,4 @@
-# Part C: parameter learning and E3
+# Part C · Parameter learning and E3
 
 This directory contains smoothed CPT MLE, exact EM for incomplete discrete
 records, and the three-state latent-factor experiment. It uses the upstream

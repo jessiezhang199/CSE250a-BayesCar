@@ -1,4 +1,4 @@
-# Part D · Exact and approximate inference
+# Part D · Inference and E4
 
 Part D provides a single-node posterior query for Part E and compares variable elimination (VE), likelihood weighting, Gibbs and rejection sampling on two fixed price-tier queries. The [E4 report](REPORT.md) includes the measured results and figure.
 
