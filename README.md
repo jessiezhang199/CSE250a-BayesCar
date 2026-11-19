@@ -4,6 +4,14 @@ CSE 250A final project. We model vehicle listing price tiers with a discrete Bay
 
 Who does what is in [WORK_SPLIT.md](WORK_SPLIT.md).
 
+## Part D: posterior inference and E4
+
+Use `from inference import query_ve` to query either selected model. The
+[Part E handoff and reproduction guide](inference/README.md) includes a
+validation-row example. The [E4 report](inference/REPORT.md) compares exact
+VE, likelihood weighting, Gibbs and rejection sampling under common and rare
+evidence, with posterior error and runtime across three seeds.
+
 ## Part C: parameter learning and E3
 
 Smoothed MLE, reusable exact missing-data EM, three-state latent H experiments,

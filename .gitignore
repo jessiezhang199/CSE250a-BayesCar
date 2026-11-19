@@ -1,4 +1,6 @@
 __pycache__/
 .DS_Store
 .ipynb_checkpoints/
+.venv/
+.pytest_cache/
 dataset/cars_dataset.csv
