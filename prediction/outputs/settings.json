@@ -1,0 +1,123 @@
+{
+  "target": "listing_price",
+  "test_rows": 10000,
+  "evidence_sets": {
+    "all_features": [
+      "brand_segment",
+      "body_type",
+      "fuel_type",
+      "accident_history",
+      "service_history_quality",
+      "urban_rural",
+      "vehicle_age",
+      "number_of_previous_owners",
+      "engine_power_hp",
+      "odometer_km",
+      "overall_condition_score"
+    ],
+    "no_condition_history": [
+      "brand_segment",
+      "body_type",
+      "fuel_type",
+      "urban_rural",
+      "vehicle_age",
+      "number_of_previous_owners",
+      "engine_power_hp",
+      "odometer_km"
+    ]
+  },
+  "paired_references": [
+    "expert",
+    "hill_climb_bic"
+  ],
+  "em": {
+    "alpha": 1.0,
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "max_iter": 6000,
+    "tol": 1e-07
+  },
+  "selection": {
+    "expert": {
+      "seed": 2
+    },
+    "hill_climb_bic": {
+      "seed": 2
+    },
+    "chow_liu": {
+      "seed": 2,
+      "val_ll_per_row": {
+        "0": -11.1724133103811,
+        "1": -11.172413288019563,
+        "2": -11.172413265508
+      }
+    },
+    "naive_bayes": {
+      "seed": 2,
+      "val_ll_per_row": {
+        "0": -11.653111033449383,
+        "1": -11.653111027406426,
+        "2": -11.653111015789046
+      }
+    },
+    "empty": {
+      "seed": 2,
+      "val_ll_per_row": {
+        "0": -13.141852883401306,
+        "1": -13.141852894483423,
+        "2": -13.14185285757942
+      }
+    }
+  },
+  "logistic": {
+    "grid": [
+      0.001,
+      0.01,
+      0.1,
+      1.0,
+      10.0,
+      100.0
+    ],
+    "all_features": {
+      "C": 100.0,
+      "val_log_loss": {
+        "0.001": 0.8897480902054591,
+        "0.01": 0.7531606296422764,
+        "0.1": 0.71844522479064,
+        "1.0": 0.7161043383096867,
+        "10.0": 0.7160271264298026,
+        "100.0": 0.7159880301819725
+      }
+    },
+    "no_condition_history": {
+      "C": 100.0,
+      "val_log_loss": {
+        "0.001": 0.9340871878428758,
+        "0.01": 0.7940415924283949,
+        "0.1": 0.7584110685795341,
+        "1.0": 0.7559131147517585,
+        "10.0": 0.755836347427412,
+        "100.0": 0.755773736856182
+      }
+    }
+  },
+  "calibration_bins": 10,
+  "part_c_model_sha256": {
+    "expert_seed0.json": "ccad1d0038198752c2f252e0104c3003fc451686064a12160cea055bb14a3bce",
+    "expert_seed1.json": "8b475a2e61a303ec7147e3a5fd56582bc4370a04123b5854887492d554e081e2",
+    "expert_seed2.json": "d5c6cb8625507c4e889359f404ba6a84cc658540d3318984ee8cc08a2b99d9b0",
+    "hill_climb_bic_seed0.json": "80b9d60069b2bd1237e2062740f6937502143cbeb0d626ee1a9487d6cec64124",
+    "hill_climb_bic_seed1.json": "4f95779d6c8a33e3adb9af128bbb7294bd476420f17dfb58d417467ce2a6e3d8",
+    "hill_climb_bic_seed2.json": "7373f5039446ccd167db9f52ae2b4448cf96023e0609b8d377fc1c7b4c924832"
+  },
+  "python": "3.12.4",
+  "packages": {
+    "numpy": "1.26.4",
+    "pandas": "2.2.2",
+    "scikit-learn": "1.5.1",
+    "matplotlib": "3.9.2"
+  }
+}

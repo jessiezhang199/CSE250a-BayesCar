@@ -8,7 +8,7 @@ Five parts, one per person. Fill in your name next to your part and update the s
 | B. E1 structure learning | Kevin Nie | Done, merged into `main` | `structure/` |
 | C. Parameter learning + E3 latent variable | Chenghao Xiong | Implementation, three-seed experiments and report complete | `parameter_learning/` |
 | D. E4 exact and approximate inference | YijunWang1121 | VE verified on both graphs, three-sampler E4 and report complete | [inference/](inference/README.md) |
-| E. E5 price prediction + final integration | TBD | Pending | |
+| E. E5 price prediction + final integration | Chloe Huang | E5 experiment and report complete, final integration pending | [prediction/](prediction/README.md) |
 
 ## A. Data + E2 missing-data experiment
 
