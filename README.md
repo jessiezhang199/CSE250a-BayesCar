@@ -4,6 +4,10 @@ CSE 250A final project. We model vehicle listing price tiers with a discrete Bay
 
 Who does what is in [WORK_SPLIT.md](WORK_SPLIT.md).
 
+## Part E · price-tier prediction and E5
+
+`python -m prediction.run_e5` scores every test row with exact VE under the expert DAG, the learned DAG, Chow-Liu, naive Bayes and the prior, and also fits a logistic regression baseline. Each model runs with all features and again without the condition and history fields. With all features the learned DAG reaches 67.1% accuracy and the expert DAG 63.9%, against 20% by chance. Logistic regression scores 67.9%, about the same as the learned DAG, and the expert DAG has the best calibration. See the [E5 report](prediction/REPORT.md) and the [reproduction guide](prediction/README.md).
+
 ## Part D: posterior inference and E4
 
 Use `from inference import query_ve` to query either selected model. The
