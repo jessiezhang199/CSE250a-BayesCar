@@ -1,4 +1,4 @@
-# Part C — Parameter estimation and E3 latent-variable analysis
+# E3 · Parameter estimation and latent-variable analysis
 
 ## Parameter learning
 

@@ -1,4 +1,4 @@
-# Part E · E5 price-tier prediction
+# Part E · Price-tier prediction and E5
 
 E5 predicts the five-tier `listing_price` on the test split with exact VE and compares the expert DAG, the learned DAG and simple baselines. Results are in the [E5 report](REPORT.md).
 
