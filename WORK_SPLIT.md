@@ -7,7 +7,7 @@ Five parts, one per person. Fill in your name next to your part and update the s
 | A. Data + E2 missing-data experiment | Jessie Zhang | Data prepared, E2 complete in notebook | [dataset/](dataset/), [complete-case_MLE_and_EM/](complete-case_MLE_and_EM/) |
 | B. E1 structure learning | Kevin Nie | E1 complete | [structure/](structure/) |
 | C. Parameter learning + E3 latent variable | Chenghao Xiong | Parameter learning and E3 complete | [parameter_learning/](parameter_learning/) |
-| D. E4 exact and approximate inference | YijunWang1121 | E4 complete | [inference/](inference/) |
+| D. E4 exact and approximate inference | Yijun Wang | E4 complete | [inference/](inference/) |
 | E. E5 price prediction + final integration | Chloe Huang | E5 complete, final integration in progress | [prediction/](prediction/) |
 
 ## A. Data + E2 missing-data experiment

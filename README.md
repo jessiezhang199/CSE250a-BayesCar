@@ -1,29 +1,43 @@
 # CSE250a-BayesCar
 
-CSE 250A final project. We model vehicle listing price tiers with a discrete Bayesian network on the Kaggle [Cars Dataset (2026)](https://www.kaggle.com/datasets/datascikhan/cars-dataset), which has 100,000 synthetic records. Because the data is synthetic, the results say nothing about real car prices or causal effects.
+CSE 250A final project by the BayesCar group: Kevin Nie, Chloe Huang, Chenghao Xiong, Yijun Wang and Jessie Zhang.
+
+We model vehicle listing price tiers with a discrete Bayesian network on the Kaggle [Cars Dataset (2026)](https://www.kaggle.com/datasets/datascikhan/cars-dataset), which has 100,000 synthetic records. The project asks four things: whether a learned graph fits better than a hand-built one, how parameter learning holds up when data is missing, how approximate inference compares with exact inference, and how well the networks predict the price tier. Because the data is synthetic, the results say nothing about real car prices or causal effects.
 
 Who does what is in [WORK_SPLIT.md](WORK_SPLIT.md).
 
-| Experiment | Question | Part | Code | Report |
-| --- | --- | --- | --- | --- |
-| [E1](#e1--structure-learning) | Does a learned DAG fit better than the expert DAG? | B | [structure/](structure/) | This README |
-| [E2](#e2--missing-data) | How do deletion, imputation and EM compare under missing data? | A | [complete-case_MLE_and_EM/](complete-case_MLE_and_EM/) | [MLE_EM.ipynb](complete-case_MLE_and_EM/MLE_EM.ipynb) |
-| [E3](#e3--latent-variable) | Does a latent factor H recover vehicle condition? | C | [parameter_learning/](parameter_learning/) | [REPORT.md](parameter_learning/REPORT.md) |
-| [E4](#e4--exact-and-approximate-inference) | How do sampling methods compare with exact VE? | D | [inference/](inference/) | [REPORT.md](inference/REPORT.md) |
-| [E5](#e5--price-tier-prediction) | How well do the networks predict the price tier? | E | [prediction/](prediction/) | [REPORT.md](prediction/REPORT.md) |
+## Experiments
+
+| Experiment | Question | Headline result | Part | Code | Write-up |
+| --- | --- | --- | --- | --- | --- |
+| [E1](#e1--structure-learning) | Does a learned DAG fit better than the expert DAG? | Yes, by 0.14 nats per test record | B | [structure/](structure/) | [README](structure/README.md) |
+| [E2](#e2--missing-data) | How do deletion, imputation and EM compare under missing data? | EM is best at every masking rate, mode imputation degrades fastest | A | [complete-case_MLE_and_EM/](complete-case_MLE_and_EM/) | [MLE_EM.ipynb](complete-case_MLE_and_EM/MLE_EM.ipynb) |
+| [E3](#e3--latent-variable) | Does a latent factor H recover vehicle condition? | No, H barely tracks condition grade and does not improve fit | C | [parameter_learning/](parameter_learning/) | [REPORT.md](parameter_learning/REPORT.md) |
+| [E4](#e4--exact-and-approximate-inference) | How do sampling methods compare with exact VE? | Likelihood weighting is the most accurate sampler, rejection sampling fails on rare evidence | D | [inference/](inference/) | [REPORT.md](inference/REPORT.md) |
+| [E5](#e5--price-tier-prediction) | How well do the networks predict the price tier? | Learned DAG 67.1%, expert DAG 63.9%, chance 20% | E | [prediction/](prediction/) | [REPORT.md](prediction/REPORT.md) |
+
+## How the parts fit together
+
+Each part reads what the earlier ones wrote, so the same splits, graphs and fitted models are used everywhere.
+
+1. Part A prepares the data in `dataset/prepared/`.
+2. Part B writes the expert and learned graphs to `structure/outputs/dags.json`.
+3. Part C fits CPTs for both graphs and saves them in `parameter_learning/outputs/models/`.
+4. Part D provides exact and approximate posterior queries on those models.
+5. Part E uses Part D's exact queries to predict the price tier, and Part A's E2 notebook uses Part C's EM.
 
 ## Reproduce
 
-Use Python 3.11 and run everything from the repository root. `prediction/requirements.txt` pulls in the Part C and Part D requirements, so one install is enough.
+Use Python 3.11 or newer and run everything from the repository root. `prediction/requirements.txt` pulls in the Part C and Part D requirements, so one install is enough.
 
 ```bash
-python3.11 -m venv .venv
+python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install -r prediction/requirements.txt
 python -m pytest -q parameter_learning/tests inference/tests prediction/tests
 ```
 
-Run the experiments in this order, since each step reads what the earlier ones wrote.
+Run the experiments in this order.
 
 ```bash
 python structure/run_e1.py                # E1, writes structure/outputs/
@@ -33,7 +47,9 @@ python -m inference.run_e4                # E4, writes inference/outputs/
 python -m prediction.run_e5               # E5, writes prediction/outputs/
 ```
 
-E2 lives in the notebook [MLE_EM.ipynb](complete-case_MLE_and_EM/MLE_EM.ipynb). Point `root` in its second cell at your checkout before running it.
+E2 lives in the notebook [MLE_EM.ipynb](complete-case_MLE_and_EM/MLE_EM.ipynb). It finds the repository root on its own, so it runs from any folder inside the checkout.
+
+Parts C, D and E record the package versions behind their committed outputs in `outputs/manifest.json` or `outputs/settings.json`. Timings will differ on your machine, and the logistic regression baseline in E5 can move in the fourth decimal with a different scikit-learn version.
 
 ## Repository layout
 
@@ -46,9 +62,14 @@ E2 lives in the notebook [MLE_EM.ipynb](complete-case_MLE_and_EM/MLE_EM.ipynb). 
 | [inference/](inference/) | D | `query_ve`, likelihood weighting, Gibbs and rejection sampling, E4 |
 | [prediction/](prediction/) | E | Price-tier prediction, baselines, metrics and E5 |
 
-## Data
+## Data and shared conventions
 
-The data has 12 discrete variables and an 80/10/10 split (seed 42). Bins and category codes come from the training rows only. Load a split with `pd.read_csv(path, index_col="source_row", dtype="Int64")` and take state order from `dataset/prepared/schema.json`. Blanks are real missing values in `service_history_quality` (about 4%) and `overall_condition_score` (about 1%). We dropped `days_on_market` and `demand_category` because nobody knows them until after the car is listed.
+- The data has 12 discrete variables and an 80/10/10 split (seed 42). Bins and category codes come from the training rows only.
+- Load a split with `pd.read_csv(path, index_col="source_row", dtype="Int64")` and take state order from `dataset/prepared/schema.json`.
+- Blanks are real missing values in `service_history_quality` (about 4%) and `overall_condition_score` (about 1%).
+- We dropped `days_on_market` and `demand_category` because nobody knows them until after the car is listed.
+- Every network has at most 4 parents per node and smoothed CPTs. Validation data picks settings and seeds, and the test split is only used for final numbers.
+- Stochastic experiments use three seeds and report the spread.
 
 ## E1 · Structure learning
 
@@ -56,27 +77,7 @@ The data has 12 discrete variables and an 80/10/10 split (seed 42). Bins and cat
 python structure/run_e1.py
 ```
 
-Every structure uses the same variables, bins, complete-case rows (train 76,081 of 80,000, test 9,474 of 10,000), at most 4 parents per node, and CPTs with add-one smoothing fit on train. Hill climbing uses add, delete and reverse moves on the BIC score, started from the empty graph, the expert DAG and 10 random DAGs. The run with the best training BIC is kept.
-
-| Structure | Edges | Params | Train BIC | Val LL / row | Test LL / row | Test gain vs expert |
-| --- | --- | --- | --- | --- | --- | --- |
-| BIC hill climbing | 23 | 851 | -824,577 | -10.782 | -10.781 | +0.138 ± 0.005 |
-| Expert DAG | 19 | 611 | -833,447 | -10.922 | -10.919 | 0 |
-| Chow-Liu tree | 11 | 98 | -854,243 | -11.216 | -11.221 | -0.302 ± 0.008 |
-| Naive Bayes | 11 | 129 | -891,708 | -11.700 | -11.694 | -0.775 ± 0.017 |
-| Empty graph | 0 | 29 | -1,004,869 | -13.192 | -13.190 | -2.271 ± 0.017 |
-
-Log-likelihoods are joint, in nats per record. The gain column is the paired per-record difference on the same test rows, with its standard error.
-
-![Expert vs learned DAG](structure/outputs/dag_comparison.png)
-
-- The learned DAG beats the expert DAG by 0.14 nats per record on test. The expert DAG still closes most of the gap between the empty graph and the learned one with 240 fewer parameters.
-- The two graphs share 11 skeleton edges, 6 with the same direction and 5 reversed. Reversals are not evidence about causality, since BIC cannot distinguish graphs in the same Markov equivalence class. With the 4-parent cap, the search makes `listing_price` a parent of several attributes instead of their child.
-- `service_history_quality` and `urban_rural` are isolated in the learned graph. Their mutual information with every other variable is below 0.0001 nats, so 5 of the 8 expert-only edges encode dependencies that this dataset does not contain.
-- The expert DAG's biggest misses are price given body type, fuel type and mileage (CMI 0.03 to 0.05 nats given the price parents) and brand given body type. See `structure/outputs/ci_tests_expert.csv`. With 76k rows the G-test rejects tiny effects, so read the CMI column, not only the p-value.
-- Greedy search is sensitive to its start. The 12 runs end at training BIC between -829,010 and -824,577, and the empty and expert starts reach the same local optimum (`structure/outputs/hc_restarts.csv`).
-
-All later parts read both graphs from `structure/outputs/dags.json` (`edges.expert` and `edges.hill_climb_bic`). The test split was only used for the final table above.
+Part B ([guide and results](structure/README.md)) writes an expert DAG by hand and learns a second one with BIC hill climbing from 12 starting graphs. Both are compared with a Chow-Liu tree, naive Bayes and the empty graph on the same complete-case rows. The learned DAG reaches -10.781 nats per test record against -10.919 for the expert DAG, a paired gain of 0.138 ± 0.005, while the expert DAG uses 240 fewer parameters. The two graphs have 11 edges in common, 5 of them with the direction reversed. Two variables, `service_history_quality` and `urban_rural`, turn out to be independent of everything else in this dataset, so the learned graph leaves them isolated.
 
 ## E2 · Missing data
 
