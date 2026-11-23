@@ -69,4 +69,4 @@ Dropping the condition and history fields cost 2.2 accuracy points for the exper
 
 ## Contributions
 
-Part E provides the prediction protocol, the baselines, the metrics and this analysis. Claude Code helped write the code and tests, run the experiment, make the figures and draft this report.
+Part E provides the prediction protocol, the baselines, the metrics and this analysis. Claude Code helped clean up the codebase.

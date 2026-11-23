@@ -44,4 +44,4 @@ VE was the fastest measured method for both queries and supplies the exact predi
 
 ## Integration and contribution notes · §6
 
-Part D supplies the exact query, the cross-library checks on both selected models, and the three-seed E4 comparison. Codex assisted with implementation, debugging, running the benchmark, producing the figure and drafting these notes. For the team submission, the contributor should adapt the text and record their own review, contributions and personal learning.
+Part D supplies the exact query, the cross-library checks on both selected models, and the three-seed E4 comparison. Codex assisted with codebase clean up. For the team submission, the contributor should adapt the text and record their own review, contributions and personal learning.
