@@ -4,20 +4,19 @@ python -m parameter_learning.prepare_labels --raw-csv dataset/cars_dataset.csv
 No raw dataset or label enters an estimator; only these small sidecars are saved.
 """
 import argparse
-import hashlib
 import json
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
 
-ROOT = Path(__file__).resolve().parents[1]
+from common import PREPARED, ROOT, SPLITS, load_split, sha256
 
 
 def prepare(raw_csv, output=None):
     raw_csv = Path(raw_csv)
     output = Path(output) if output else ROOT / "parameter_learning" / "labels"
-    schema = json.loads((ROOT / "dataset/prepared/schema.json").read_text())["columns"]
+    schema = json.loads((PREPARED / "schema.json").read_text())["columns"]
     raw = pd.read_csv(raw_csv, usecols=[*schema, "condition_grade"])
     raw.index.name = "source_row"
     encoded = pd.DataFrame(index=raw.index)
@@ -30,8 +29,8 @@ def prepare(raw_csv, output=None):
         else:
             encoded[v] = x.map({s: i for i, s in enumerate(info["states"])}).astype("Int64")
     prepared, indices = {}, []
-    for split in ("train", "val", "test"):
-        frame = pd.read_csv(ROOT / f"dataset/prepared/{split}.csv", index_col="source_row", dtype="Int64")
+    for split in SPLITS:
+        frame = load_split(split)
         # Compare every model cell and missingness bit, not only row counts.
         expected = encoded.loc[frame.index, frame.columns]
         # read_csv(dtype='Int64') also makes the index nullable. .loc preserves
@@ -50,7 +49,7 @@ def prepare(raw_csv, output=None):
     output.mkdir(parents=True, exist_ok=True)
     for split, labels in prepared.items():
         labels.to_csv(output / f"{split}.csv", lineterminator="\n")
-    sha = hashlib.file_digest(raw_csv.open("rb"), "sha256").hexdigest()
+    sha = sha256(raw_csv)
     provenance = {"source": "https://www.kaggle.com/datasets/datascikhan/cars-dataset",
                   "raw_sha256": sha, "raw_rows": len(raw), "verified_model_cells": len(raw) * len(schema),
                   "alignment": "All encoded model cells, missingness and source_row checked against prepared splits",

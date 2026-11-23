@@ -11,7 +11,7 @@ Who does what is in [WORK_SPLIT.md](WORK_SPLIT.md).
 | Experiment | Question | Headline result | Part | Code | Write-up |
 | --- | --- | --- | --- | --- | --- |
 | [E1](#e1--structure-learning) | Does a learned DAG fit better than the expert DAG? | Yes, by 0.14 nats per test record | B | [structure/](structure/) | [README](structure/README.md) |
-| [E2](#e2--missing-data) | How do deletion, imputation and EM compare under missing data? | EM is best at every masking rate, mode imputation degrades fastest | A | [complete-case_MLE_and_EM/](complete-case_MLE_and_EM/) | [MLE_EM.ipynb](complete-case_MLE_and_EM/MLE_EM.ipynb) |
+| [E2](#e2--missing-data) | How do deletion, imputation and EM compare under missing data? | EM is best at every masking rate, mode imputation degrades fastest | A | [complete-case_MLE_and_EM/](complete-case_MLE_and_EM/) | [README](complete-case_MLE_and_EM/README.md) |
 | [E3](#e3--latent-variable) | Does a latent factor H recover vehicle condition? | No, H barely tracks condition grade and does not improve fit | C | [parameter_learning/](parameter_learning/) | [REPORT.md](parameter_learning/REPORT.md) |
 | [E4](#e4--exact-and-approximate-inference) | How do sampling methods compare with exact VE? | Likelihood weighting is the most accurate sampler, rejection sampling fails on rare evidence | D | [inference/](inference/) | [REPORT.md](inference/REPORT.md) |
 | [E5](#e5--price-tier-prediction) | How well do the networks predict the price tier? | Learned DAG 67.1%, expert DAG 63.9%, chance 20% | E | [prediction/](prediction/) | [REPORT.md](prediction/REPORT.md) |
@@ -24,48 +24,52 @@ Each part reads what the earlier ones wrote, so the same splits, graphs and fitt
 2. Part B writes the expert and learned graphs to `structure/outputs/dags.json`.
 3. Part C fits CPTs for both graphs and saves them in `parameter_learning/outputs/models/`.
 4. Part D provides exact and approximate posterior queries on those models.
-5. Part E uses Part D's exact queries to predict the price tier, and Part A's E2 notebook uses Part C's EM.
+5. Part E uses Part D's exact queries to predict the price tier, and Part A's E2 uses Part C's EM.
+
+The paths and loaders that every part shares are in [common.py](common.py).
 
 ## Reproduce
 
-Use Python 3.11 or newer and run everything from the repository root. `prediction/requirements.txt` pulls in the Part C and Part D requirements, so one install is enough.
+Use Python 3.11 and run everything from the repository root.
 
 ```bash
-python3 -m venv .venv
+python3.11 -m venv .venv
 source .venv/bin/activate
-python -m pip install -r prediction/requirements.txt
-python -m pytest -q parameter_learning/tests inference/tests prediction/tests
+python -m pip install -r requirements.txt
+python -m pytest -q
+python run_all.py
 ```
 
-Run the experiments in this order.
+`run_all.py` runs every step in dependency order and takes about eight minutes. A step can also run on its own, in which case it reads the committed outputs of the steps before it.
 
 ```bash
-python structure/run_e1.py                # E1, writes structure/outputs/
-python -m parameter_learning.run_part_c   # CPTs, EM and E3, writes parameter_learning/outputs/
-python -m inference.check_setup           # checks VE against pgmpy on both graphs
-python -m inference.run_e4                # E4, writes inference/outputs/
-python -m prediction.run_e5               # E5, writes prediction/outputs/
+python -m structure.run_e1                 # E1, writes the shared DAGs
+python -m complete-case_MLE_and_EM.run_e2  # E2
+python -m parameter_learning.run_part_c    # shared CPTs and E3
+python -m inference.check_setup            # checks VE against pgmpy on both graphs
+python -m inference.run_e4                 # E4
+python -m prediction.run_e5                # E5
 ```
 
-E2 lives in the notebook [MLE_EM.ipynb](complete-case_MLE_and_EM/MLE_EM.ipynb). It finds the repository root on its own, so it runs from any folder inside the checkout.
-
-Parts C, D and E record the package versions behind their committed outputs in `outputs/manifest.json` or `outputs/settings.json`. Timings will differ on your machine, and the logistic regression baseline in E5 can move in the fourth decimal with a different scikit-learn version.
+Each experiment module writes to its part's `outputs/` folder, or to another folder given with `--output-dir`. We checked that a fresh clone with the versions pinned in `requirements.txt` reproduces every committed number. Only the timing columns change from machine to machine.
 
 ## Repository layout
 
 | Path | Part | Contents |
 | --- | --- | --- |
 | [dataset/](dataset/) | A | Cleaning notebook, prepared `train.csv`, `val.csv`, `test.csv`, `schema.json` and `column_audit.csv` |
-| [complete-case_MLE_and_EM/](complete-case_MLE_and_EM/) | A | E2 notebook comparing complete-case MLE, mode imputation and EM under MCAR masks |
+| [complete-case_MLE_and_EM/](complete-case_MLE_and_EM/) | A | E2 script and notebook comparing complete-case MLE, mode imputation and EM under MCAR masks |
 | [structure/](structure/) | B | BIC score, hill climbing, Chow-Liu, CI tests and the shared `outputs/dags.json` |
 | [parameter_learning/](parameter_learning/) | C | Smoothed MLE, exact missing-data EM, fitted models and E3 |
 | [inference/](inference/) | D | `query_ve`, likelihood weighting, Gibbs and rejection sampling, E4 |
 | [prediction/](prediction/) | E | Price-tier prediction, baselines, metrics and E5 |
+| [common.py](common.py) | E | Shared paths, split and schema loaders |
+| [run_all.py](run_all.py) | E | Runs every experiment in order |
 
 ## Data and shared conventions
 
 - The data has 12 discrete variables and an 80/10/10 split (seed 42). Bins and category codes come from the training rows only.
-- Load a split with `pd.read_csv(path, index_col="source_row", dtype="Int64")` and take state order from `dataset/prepared/schema.json`.
+- Load a split with `common.load_split(name)`, which keeps missing cells as `<NA>`. State order comes from `dataset/prepared/schema.json`.
 - Blanks are real missing values in `service_history_quality` (about 4%) and `overall_condition_score` (about 1%).
 - We dropped `days_on_market` and `demand_category` because nobody knows them until after the car is listed.
 - Every network has at most 4 parents per node and smoothed CPTs. Validation data picks settings and seeds, and the test split is only used for final numbers.
@@ -74,14 +78,18 @@ Parts C, D and E record the package versions behind their committed outputs in `
 ## E1 · Structure learning
 
 ```bash
-python structure/run_e1.py
+python -m structure.run_e1
 ```
 
 Part B ([guide and results](structure/README.md)) writes an expert DAG by hand and learns a second one with BIC hill climbing from 12 starting graphs. Both are compared with a Chow-Liu tree, naive Bayes and the empty graph on the same complete-case rows. The learned DAG reaches -10.781 nats per test record against -10.919 for the expert DAG, a paired gain of 0.138 ± 0.005, while the expert DAG uses 240 fewer parameters. The two graphs have 11 edges in common, 5 of them with the direction reversed. Two variables, `service_history_quality` and `urban_rural`, turn out to be independent of everything else in this dataset, so the learned graph leaves them isolated.
 
 ## E2 · Missing data
 
-Part A's [notebook](complete-case_MLE_and_EM/MLE_EM.ipynb) hides an extra 0%, 20% or 40% of the observed `service_history_quality` and `overall_condition_score` cells in the training split, completely at random. It fits the expert DAG on each masked copy with complete-case MLE, with mode imputation followed by MLE, and with Part C's EM. The three methods see the same mask, and each rate is repeated with three masking seeds.
+```bash
+python -m complete-case_MLE_and_EM.run_e2
+```
+
+Part A ([guide](complete-case_MLE_and_EM/README.md), [notebook](complete-case_MLE_and_EM/MLE_EM.ipynb)) hides an extra 0%, 20% or 40% of the observed `service_history_quality` and `overall_condition_score` cells in the training split, completely at random. It fits the expert DAG on each masked copy with complete-case MLE, with mode imputation followed by MLE, and with Part C's EM. The three methods see the same mask, and each rate is repeated with three masking seeds.
 
 | Added masking | Complete-case MLE | Mode imputation + MLE | EM | Complete-case training rows kept |
 | --- | ---: | ---: | ---: | ---: |
@@ -89,7 +97,7 @@ Part A's [notebook](complete-case_MLE_and_EM/MLE_EM.ipynb) hides an extra 0%, 20
 | 20% | -10.86595 | -10.99005 | -10.86431 | 48,699 / 80,000 (60.9%) |
 | 40% | -10.87056 | -11.22263 | -10.86666 | 27,441 / 80,000 (34.3%) |
 
-Values are test log-likelihood in nats per row, averaged over the three seeds. EM comes out on top at every rate and beats complete-case MLE on both test log-likelihood and CPT KL in all six masked runs, though complete-case MLE stays close even when it keeps only a third of the rows. Mode imputation gets much worse as more cells are hidden. The notebook also has condition-score recovery accuracy and per-seed results.
+Values are test log-likelihood in nats per row, averaged over the three seeds. EM comes out on top at every rate and beats complete-case MLE on both test log-likelihood and CPT KL in all six masked runs, though complete-case MLE stays close even when it keeps only a third of the rows. Mode imputation gets much worse as more cells are hidden. [summary.csv](complete-case_MLE_and_EM/outputs/summary.csv) also has condition-score recovery accuracy and the spread across seeds.
 
 ## E3 · Latent variable
 

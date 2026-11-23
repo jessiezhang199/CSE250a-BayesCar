@@ -4,12 +4,13 @@ import numpy as np
 import pandas as pd
 import pytest
 
+from common import MODELS, PREPARED, TARGET, load_dags, load_split
 from parameter_learning import DiscreteBN, fit_mle
-from prediction.core import (EVIDENCE_SETS, FEATURES, ROOT, TARGET, ece, evidence_rows, load_split,
-                             one_hot, predict_bn, reliability, scores)
+from prediction.core import (EVIDENCE_SETS, FEATURES, ece, evidence_rows, one_hot, predict_bn,
+                             reliability, scores)
 from structure.bn import dag_from_edges
 
-ARTIFACT = json.loads((ROOT / "structure/outputs/dags.json").read_text())
+ARTIFACT = load_dags()
 CARD = ARTIFACT["cardinality"]
 
 
@@ -19,7 +20,7 @@ def val():
 
 
 def test_feature_sets_exclude_target_and_match_schema():
-    schema = json.loads((ROOT / "dataset/prepared/schema.json").read_text())
+    schema = json.loads((PREPARED / "schema.json").read_text())
     assert TARGET not in FEATURES
     assert set(FEATURES) | {TARGET} == set(schema["columns"]) == set(ARTIFACT["nodes"])
     assert set(EVIDENCE_SETS["no_condition_history"]) < set(FEATURES)
@@ -34,7 +35,7 @@ def test_evidence_rows_skip_missing_cells(val):
 
 
 def test_predict_bn_matches_enumeration_with_missing_values(val):
-    model = DiscreteBN.load(ROOT / "parameter_learning/outputs/models/hill_climb_bic_selected.json")
+    model = DiscreteBN.load(MODELS / "hill_climb_bic_selected.json")
     rows = pd.concat([val.loc[val["service_history_quality"].isna()].head(20), val.head(20)])
     hidden = rows.copy()
     hidden[TARGET] = pd.NA

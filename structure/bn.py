@@ -3,31 +3,12 @@
 A DAG is a dict {node: sorted tuple of parents}. Data is a complete-case
 integer DataFrame whose columns follow dataset/prepared/schema.json.
 """
-import json
 from itertools import permutations
-from pathlib import Path
 
 import networkx as nx
 import numpy as np
 import pandas as pd
 from scipy.stats import chi2
-
-ROOT = Path(__file__).resolve().parents[1]
-PREPARED = ROOT / "dataset" / "prepared"
-
-
-# ---------- data ----------
-
-def load_schema():
-    schema = json.loads((PREPARED / "schema.json").read_text())["columns"]
-    return {col: len(info["states"]) for col, info in schema.items()}
-
-
-def load_split(name, columns):
-    """Load one split, keep rows complete on `columns`. Returns (frame, n_raw)."""
-    df = pd.read_csv(PREPARED / f"{name}.csv", index_col="source_row", dtype="Int64")
-    complete = df[columns].dropna().astype(int)
-    return complete, len(df)
 
 
 # ---------- graph helpers ----------

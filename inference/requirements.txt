@@ -1,2 +1,0 @@
--r ../parameter_learning/requirements-lock.txt
-pgmpy==1.1.2

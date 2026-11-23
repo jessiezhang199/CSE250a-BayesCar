@@ -1,6 +1,10 @@
-"""Run the fixed E4 validation queries and write the benchmark, diagnostics and figure."""
+"""E4: compare likelihood weighting, Gibbs and rejection sampling with exact VE.
+
+python -m inference.run_e4
+Runs the fixed validation queries on the expert network and writes the benchmark,
+the Gibbs burn-in pilot and the comparison figure.
+"""
 import argparse
-import hashlib
 from importlib.metadata import version
 from itertools import product
 import json
@@ -15,12 +19,14 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
+from common import MODELS, ROOT, TARGET, load_split, sha256
 from inference import query_ve
-from inference.check_setup import CASES, EVIDENCE_FIELDS, ROOT, TARGET, pgmpy_reference
+from inference.check_setup import CASES, EVIDENCE_FIELDS, pgmpy_reference
 from inference.sampling import gibbs_sampling, likelihood_weighting, rejection_sampling
 from parameter_learning import DiscreteBN
 
-MODEL = ROOT / "parameter_learning/outputs/models/expert_selected.json"
+OUTPUT_DIR = Path(__file__).resolve().parent / "outputs"
+MODEL = MODELS / "expert_selected.json"
 BUDGETS = (100, 1_000, 10_000)
 SEEDS = (0, 1, 2)
 METHODS = {"Likelihood weighting": likelihood_weighting, "Gibbs": gibbs_sampling,
@@ -110,12 +116,12 @@ def plot(summary, references, path):
     plt.close(fig)
 
 
-def run(out):
+def run(output_dir=OUTPUT_DIR):
+    out = Path(output_dir)
     model, load_ms = timed(DiscreteBN.load, MODEL)
     reference = pgmpy_reference(model)
     joint = reference.query(EVIDENCE_FIELDS, show_progress=False)
-    val = pd.read_csv(ROOT / "dataset/prepared/val.csv", index_col="source_row", dtype="Int64")
-    counts = val[EVIDENCE_FIELDS].value_counts()
+    counts = load_split("val")[EVIDENCE_FIELDS].value_counts()
     cases = {k: dict(zip(EVIDENCE_FIELDS, v)) for k, v in CASES.items()}
     exact = {}
     baselines = []
@@ -156,7 +162,7 @@ def run(out):
     summary.to_csv(out / "summary.csv", index=False)
     plot(summary, references, out / "e4_comparison.png")
     metadata = dict(model=str(MODEL.relative_to(ROOT).as_posix()),
-                    model_sha256=hashlib.sha256(MODEL.read_bytes()).hexdigest(),
+                    model_sha256=sha256(MODEL),
                     model_load_ms=load_ms, target=TARGET, evidence=cases, budgets=BUDGETS, seeds=SEEDS,
                     burn_in=burn_in, pilot_seeds=PILOT_SEEDS, pilot_draws=PILOT_DRAWS,
                     pilot_burn_candidates=BURN_CANDIDATES, pilot_max_tv=PILOT_TV_LIMIT,
@@ -173,5 +179,5 @@ def tier_columns(model):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--output-dir", type=Path, default=Path(__file__).parent / "outputs")
+    parser.add_argument("--output-dir", type=Path, default=OUTPUT_DIR)
     run(parser.parse_args().output_dir)

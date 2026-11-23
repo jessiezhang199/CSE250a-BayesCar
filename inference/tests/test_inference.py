@@ -2,8 +2,9 @@ import numpy as np
 import pandas as pd
 import pytest
 
+from common import MODELS, TARGET, load_split
 from inference import query_ve
-from inference.check_setup import ROOT, TARGET, pgmpy_reference
+from inference.check_setup import pgmpy_reference
 from inference.sampling import gibbs_sampling, likelihood_weighting, rejection_sampling
 from parameter_learning import DiscreteBN
 
@@ -21,9 +22,9 @@ def collider():
 
 @pytest.mark.parametrize("name", ["expert", "hill_climb_bic"])
 def test_real_queries_against_pgmpy(name):
-    model = DiscreteBN.load(ROOT / f"parameter_learning/outputs/models/{name}_selected.json")
+    model = DiscreteBN.load(MODELS / f"{name}_selected.json")
     oracle = pgmpy_reference(model)
-    val = pd.read_csv(ROOT / "dataset/prepared/val.csv", index_col="source_row", dtype="Int64")
+    val = load_split("val")
     row = val.loc[val.overall_condition_score.isna()].iloc[0]
     row_evidence = row.drop(TARGET).dropna().to_dict()
     queries = [(TARGET, row_evidence), (TARGET, {}), ("vehicle_age", {TARGET: 4}),

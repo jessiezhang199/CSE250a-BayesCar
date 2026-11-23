@@ -6,10 +6,9 @@ splits, schema and DAGs unchanged. `condition_grade` is evaluation-only.
 
 ## Reproduce
 
-From the repository root, with Python 3.11 or newer:
+Run these from the repository root after installing the root `requirements.txt`.
 
 ```bash
-pip install -r parameter_learning/requirements.txt
 python -m pytest parameter_learning/tests -q
 python -m parameter_learning.run_part_c
 python -m parameter_learning.verify_outputs

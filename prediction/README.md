@@ -4,15 +4,14 @@ E5 predicts the five-tier `listing_price` on the test split with exact VE and co
 
 ## Reproduce
 
-Run these from the repository root with Python 3.11 or newer.
+Run these from the repository root after installing the root `requirements.txt`.
 
 ```bash
-python -m pip install -r prediction/requirements.txt
 python -m pytest -q prediction/tests
 python -m prediction.run_e5
 ```
 
-The run takes about a minute and writes to `prediction/outputs/`. Pass `--output-dir /path/to/results` to write somewhere else. The outputs are deterministic.
+The run takes about three minutes and writes to `prediction/outputs/`. Pass `--output-dir /path/to/results` to write somewhere else. The outputs are deterministic.
 
 ## How the run works
 
