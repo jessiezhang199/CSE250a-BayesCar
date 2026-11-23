@@ -1,10 +1,10 @@
-"""Reproduce Part C using the fixed upstream data/DAGs; no structure search.
+"""Part C: fit the shared CPTs (complete-case MLE and EM) and run E3 with a latent factor H.
 
 python -m parameter_learning.run_part_c
-All labels are read only AFTER fitting and validation-based selection finish.
+Uses Part A's splits and Part B's DAGs unchanged. condition_grade labels are read only
+after fitting and validation-based seed selection finish.
 """
 import argparse
-import hashlib
 import json
 from pathlib import Path
 import platform
@@ -17,17 +17,13 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
+from common import DAGS, PREPARED, ROOT, SPLITS, load_dags, load_split, sha256
 from parameter_learning import fit_mle, fit_em
 from parameter_learning.metrics import normalized_mutual_information as nmi
 from structure.bn import dag_from_edges, n_params
 
-ROOT = Path(__file__).resolve().parents[1]
 HERE = Path(__file__).resolve().parent
-
-
-def hash_file(p):
-    with p.open("rb") as stream:
-        return hashlib.file_digest(stream, "sha256").hexdigest()
+OUTPUT_DIR = HERE / "outputs"
 
 
 def plot_detail(out):
@@ -50,15 +46,14 @@ def plot_detail(out):
     plt.close(fig)
 
 
-def run(output=None):
-    out = Path(output) if output else HERE / "outputs"
+def run(output_dir=OUTPUT_DIR):
+    out = Path(output_dir)
     for folder in (out, out / "models", out / "histories"):
         folder.mkdir(parents=True, exist_ok=True)
     cfg = json.loads((HERE / "config.json").read_text())
-    artifact = json.loads((ROOT / "structure/outputs/dags.json").read_text())
+    artifact = load_dags()
     card = artifact["cardinality"]
-    data = {s: pd.read_csv(ROOT / f"dataset/prepared/{s}.csv", index_col="source_row", dtype="Int64")
-            for s in ("train", "val", "test")}
+    data = {s: load_split(s) for s in SPLITS}
     dags = {name: dag_from_edges(card, artifact["edges"][name]) for name in ("expert", "hill_climb_bic")}
     spec = cfg["latent_graph"]
     latent_edges = [e for e in artifact["edges"][spec["base"]] if e not in spec["remove_edges"]] + spec["add_edges"]
@@ -226,14 +221,14 @@ def run(output=None):
     fig.tight_layout()
     fig.savefig(out / "e3_association.png", dpi=160)
     plt.close(fig)
-    inputs = [ROOT / f"dataset/prepared/{s}.csv" for s in data] + [ROOT / "dataset/prepared/schema.json",
-              ROOT / "structure/outputs/dags.json", HERE / "config.json", HERE / "labels/provenance.json"]
+    inputs = [PREPARED / f"{s}.csv" for s in data] + [PREPARED / "schema.json", DAGS,
+              HERE / "config.json", HERE / "labels/provenance.json"]
     inputs += [HERE / f"labels/{s}.csv" for s in data]
-    manifest = {"upstream_commit": "d0446966a9ed62b77807999dcd80e76d0df5edcb", "config": cfg,
+    manifest = {"config": cfg,
                 "python": sys.version, "platform": platform.platform(), "numpy": np.__version__,
                 "pandas": pd.__version__, "elapsed_seconds": time.perf_counter() - started,
                 "rows": {s: len(f) for s, f in data.items()},
-                "input_sha256": {p.relative_to(ROOT).as_posix(): hash_file(p) for p in inputs}}
+                "input_sha256": {p.relative_to(ROOT).as_posix(): sha256(p) for p in inputs}}
     (out / "manifest.json").write_text(json.dumps(manifest, indent=2), newline="\n")
     print(pd.DataFrame(summary).to_string(index=False), flush=True)
     print(group.to_string(), flush=True)
@@ -242,6 +237,5 @@ def run(output=None):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--output")
-    args = parser.parse_args()
-    run(args.output)
+    parser.add_argument("--output-dir", type=Path, default=OUTPUT_DIR)
+    run(parser.parse_args().output_dir)

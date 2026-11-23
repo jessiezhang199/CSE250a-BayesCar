@@ -1,2 +1,0 @@
--r ../inference/requirements.txt
-scikit-learn>=1.4,<2

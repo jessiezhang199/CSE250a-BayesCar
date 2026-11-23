@@ -1,6 +1,6 @@
 # Work split
 
-Five parts, one per person. Fill in your name next to your part and update the status when it changes.
+Five parts, one per person. The table lists who owns each part, its status and where its code lives.
 
 | Part | Owner | Status | Code |
 | --- | --- | --- | --- |
@@ -8,7 +8,7 @@ Five parts, one per person. Fill in your name next to your part and update the s
 | B. E1 structure learning | Kevin Nie | E1 complete | [structure/](structure/) |
 | C. Parameter learning + E3 latent variable | Chenghao Xiong | Parameter learning and E3 complete | [parameter_learning/](parameter_learning/) |
 | D. E4 exact and approximate inference | Yijun Wang | E4 complete | [inference/](inference/) |
-| E. E5 price prediction + final integration | Chloe Huang | E5 complete, final integration in progress | [prediction/](prediction/) |
+| E. E5 price prediction + final integration | Chloe Huang | E5 complete, code integrated | [prediction/](prediction/) |
 
 ## A. Data + E2 missing-data experiment
 
@@ -42,7 +42,7 @@ E delivers accuracy, log-loss and calibration plots, reproduction notes, report 
 
 ## Shared conventions
 
-- Load splits with `pd.read_csv(path, index_col="source_row", dtype="Int64")` and take state order from `dataset/prepared/schema.json`.
+- Load splits with `common.load_split(name)` and take state order from `dataset/prepared/schema.json`.
 - Read the expert and learned DAGs from `structure/outputs/dags.json` so every part uses the same structures.
 - Use at most 4 parents per node and smoothed CPTs. Choose settings on the validation set and keep the test set for final numbers.
 - Stochastic experiments use three seeds and report variability.

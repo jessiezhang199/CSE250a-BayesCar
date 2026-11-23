@@ -1,6 +1,9 @@
-"""Run E5 on the test split and write metrics, calibration tables and figures."""
+"""E5: predict the listing price tier on the test split with exact VE and compare models.
+
+python -m prediction.run_e5
+Writes metrics, paired gains, calibration tables and figures.
+"""
 import argparse
-import hashlib
 from importlib.metadata import version
 import json
 from pathlib import Path
@@ -9,14 +12,15 @@ import platform
 import numpy as np
 import pandas as pd
 
+from common import MODELS, ROOT, SPLITS, TARGET, load_dags, load_split, sha256
 from parameter_learning import DiscreteBN, fit_em
-from prediction.core import (EVIDENCE_SETS, ROOT, TARGET, fit_logistic, labels, load_split, one_hot,
-                             per_row, predict_bn, reliability, scores)
+from prediction.core import (EVIDENCE_SETS, fit_logistic, labels, one_hot, per_row, predict_bn,
+                             reliability, scores)
 from prediction.plots import calibration_figure, metric_figure
 from structure.bn import dag_from_edges
 
+OUTPUT_DIR = ROOT / "prediction/outputs"
 PART_C = ROOT / "parameter_learning"
-DAGS = ROOT / "structure/outputs/dags.json"
 FITTED = ("expert", "hill_climb_bic")
 BASELINE_GRAPHS = ("chow_liu", "naive_bayes", "empty")
 LOGISTIC_GRID = (0.001, 0.01, 0.1, 1.0, 10.0, 100.0)
@@ -43,7 +47,7 @@ def fit_baselines(artifact, cfg, train, val):
 
 def load_fitted(cfg):
     selected = json.loads((PART_C / "outputs/selection.json").read_text())
-    models = {(name, seed): DiscreteBN.load(PART_C / f"outputs/models/{name}_seed{seed}.json")
+    models = {(name, seed): DiscreteBN.load(MODELS / f"{name}_seed{seed}.json")
               for name in FITTED for seed in cfg["seeds"]}
     return models, {name: {"seed": selected[name]["seed"]} for name in FITTED}
 
@@ -65,12 +69,13 @@ def paired_gains(rows, evidence):
     return out
 
 
-def run(output_dir):
+def run(output_dir=OUTPUT_DIR):
+    output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
     cfg = json.loads((PART_C / "config.json").read_text())
-    artifact = json.loads(DAGS.read_text())
+    artifact = load_dags()
     card = artifact["cardinality"]
-    train, val, test = (load_split(s) for s in ("train", "val", "test"))
+    train, val, test = (load_split(s) for s in SPLITS)
     y = labels(test)
 
     models, selection = load_fitted(cfg)
@@ -122,8 +127,7 @@ def summarize(runs):
 
 
 def write_settings(output_dir, cfg, selection, logistic, n_test):
-    hashes = {p.name: hashlib.sha256(p.read_bytes()).hexdigest()
-              for p in sorted((PART_C / "outputs/models").glob("*_seed*.json"))
+    hashes = {p.name: sha256(p) for p in sorted(MODELS.glob("*_seed*.json"))
               if p.name.split("_seed")[0] in FITTED}
     settings = {
         "target": TARGET, "test_rows": n_test, "evidence_sets": {k: list(v) for k, v in EVIDENCE_SETS.items()},
@@ -138,5 +142,5 @@ def write_settings(output_dir, cfg, selection, logistic, n_test):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--output-dir", type=Path, default=ROOT / "prediction/outputs")
+    parser.add_argument("--output-dir", type=Path, default=OUTPUT_DIR)
     run(parser.parse_args().output_dir)

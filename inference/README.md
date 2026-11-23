@@ -28,12 +28,9 @@ Load each model once when scoring multiple rows. Pass the agreed listing-time fe
 
 ## Reproduce E4
 
-The repository's local environment uses Python 3.11. From a fresh checkout:
+Run these from the repository root after installing the root `requirements.txt`.
 
 ```bash
-python3.11 -m venv .venv
-source .venv/bin/activate
-python -m pip install -r inference/requirements.txt
 python -m inference.check_setup
 python -m pytest -q inference/tests parameter_learning/tests
 python -m inference.run_e4

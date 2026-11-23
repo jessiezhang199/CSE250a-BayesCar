@@ -1,15 +1,12 @@
 """Evidence encoding, model predictions and scores for E5 price-tier prediction."""
-from pathlib import Path
-
 import numpy as np
 import pandas as pd
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import log_loss
 
+from common import TARGET
 from inference import query_ve
 
-ROOT = Path(__file__).resolve().parents[1]
-TARGET = "listing_price"
 FEATURES = (
     "brand_segment", "body_type", "fuel_type", "accident_history", "service_history_quality",
     "urban_rural", "vehicle_age", "number_of_previous_owners", "engine_power_hp",
@@ -20,10 +17,6 @@ EVIDENCE_SETS = {
     "all_features": FEATURES,
     "no_condition_history": tuple(f for f in FEATURES if f not in HISTORY_FIELDS),
 }
-
-
-def load_split(name):
-    return pd.read_csv(ROOT / f"dataset/prepared/{name}.csv", index_col="source_row", dtype="Int64")
 
 
 def evidence_rows(frame, features):

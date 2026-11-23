@@ -7,7 +7,7 @@ Part B defines the expert DAG, learns a second DAG with BIC hill climbing, and c
 Run from the repository root. It takes a few seconds.
 
 ```bash
-python structure/run_e1.py
+python -m structure.run_e1
 ```
 
 ## Setup

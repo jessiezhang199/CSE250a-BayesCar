@@ -1,26 +1,20 @@
 """Verify persisted experiment results and integration contracts without refitting."""
 import json
-import hashlib
-from pathlib import Path
 
 import numpy as np
 import pandas as pd
 
+from common import ROOT, load_split, sha256
 from parameter_learning import DiscreteBN
 
-ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "parameter_learning/outputs"
-
-
-def hash_file(path):
-    with path.open("rb") as stream:
-        return hashlib.file_digest(stream, "sha256").hexdigest()
 
 
 def verify():
     manifest = json.loads((OUT / "manifest.json").read_text())
     for relative, expected in manifest["input_sha256"].items():
-        assert hash_file(ROOT / relative.replace("\\", "/")) == expected, f"Input changed: {relative}"
+        assert sha256(ROOT / relative) == expected, f"Input changed: {relative}"
+    test = load_split("test")
     runs = pd.read_csv(OUT / "restarts.csv")
     assert len(runs) == 9 and runs.converged.all()
     selected = json.loads((OUT / "selection.json").read_text())
@@ -39,7 +33,6 @@ def verify():
             if row.seed == winner.seed:
                 for v in chosen.dag:
                     np.testing.assert_array_equal(chosen.cpts[v], restored.cpts[v])
-            test = pd.read_csv(ROOT / "dataset/prepared/test.csv", index_col="source_row", dtype="Int64")
             # Confirms that serialized CPTs reproduce the recorded test metric.
             ll = restored.log_likelihood(test, latent_nodes=("H",) if "H" in restored.dag else ())
             np.testing.assert_allclose(ll.mean(), row.test_ll_per_row, atol=1e-11, rtol=0)

@@ -1,19 +1,23 @@
-"""Check the A/B/C handoff and print reference values for the two E4 queries."""
-import json
-from pathlib import Path
+"""Check that Part C's models match the schema and Part B's DAGs, and that VE matches pgmpy.
+
+python -m inference.check_setup
+Prints the reference posteriors for the two E4 evidence cases on both graphs.
+"""
+import warnings
 
 import numpy as np
 import pandas as pd
+
+warnings.filterwarnings("ignore", category=FutureWarning, module="pgmpy")
 from pgmpy.factors.discrete import TabularCPD
 from pgmpy.inference import VariableElimination
 from pgmpy.models import DiscreteBayesianNetwork
 
+from common import MODELS, TARGET, load_card, load_dags, load_split
 from inference import query_ve
 from parameter_learning import DiscreteBN
-from structure.bn import dag_from_edges, load_schema, to_nx
+from structure.bn import dag_from_edges, to_nx
 
-ROOT = Path(__file__).resolve().parents[1]
-TARGET = "listing_price"
 EVIDENCE_FIELDS = ["odometer_km", "overall_condition_score"]
 CASES = {"common": (2, 0), "rare": (0, 0)}
 
@@ -31,12 +35,11 @@ def pgmpy_reference(model):
 
 
 def main():
-    val = pd.read_csv(ROOT / "dataset/prepared/val.csv", index_col="source_row", dtype="Int64")
-    counts = val[EVIDENCE_FIELDS].value_counts()
-    edges = json.loads((ROOT / "structure/outputs/dags.json").read_text())["edges"]
-    card = load_schema()
+    counts = load_split("val")[EVIDENCE_FIELDS].value_counts()
+    edges = load_dags()["edges"]
+    card = load_card()
     for name in ("expert", "hill_climb_bic"):
-        model = DiscreteBN.load(ROOT / f"parameter_learning/outputs/models/{name}_selected.json")
+        model = DiscreteBN.load(MODELS / f"{name}_selected.json")
         if model.card != card or model.dag != dag_from_edges(card, edges[name]):
             raise ValueError(f"{name} disagrees with the prepared schema or Part B DAG")
         reference = pgmpy_reference(model)
