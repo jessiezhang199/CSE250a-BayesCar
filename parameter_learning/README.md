@@ -1,4 +1,4 @@
-# Part C: parameter learning and E3
+# Part C · Parameter learning and E3
 
 This directory contains smoothed CPT MLE, exact EM for incomplete discrete
 records, and the three-state latent-factor experiment. It uses the upstream
@@ -6,10 +6,9 @@ splits, schema and DAGs unchanged. `condition_grade` is evaluation-only.
 
 ## Reproduce
 
-From the repository root, with Python 3.11 or newer:
+Run these from the repository root after installing the root `requirements.txt`.
 
 ```bash
-pip install -r parameter_learning/requirements.txt
 python -m pytest parameter_learning/tests -q
 python -m parameter_learning.run_part_c
 python -m parameter_learning.verify_outputs

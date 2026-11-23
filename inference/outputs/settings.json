@@ -1,0 +1,50 @@
+{
+  "model": "parameter_learning/outputs/models/expert_selected.json",
+  "model_sha256": "d5c6cb8625507c4e889359f404ba6a84cc658540d3318984ee8cc08a2b99d9b0",
+  "model_load_ms": 0.37879101000726223,
+  "target": "listing_price",
+  "evidence": {
+    "common": {
+      "odometer_km": 2,
+      "overall_condition_score": 0
+    },
+    "rare": {
+      "odometer_km": 0,
+      "overall_condition_score": 0
+    }
+  },
+  "budgets": [
+    100,
+    1000,
+    10000
+  ],
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "burn_in": 50,
+  "pilot_seeds": [
+    101,
+    102,
+    103
+  ],
+  "pilot_draws": 2000,
+  "pilot_burn_candidates": [
+    50,
+    200,
+    500
+  ],
+  "pilot_max_tv": 0.08,
+  "sampler_timing_repeats": 3,
+  "ve_timing_repeats": 31,
+  "platform": "macOS-26.5-arm64-arm-64bit",
+  "python": "3.11.10",
+  "packages": {
+    "numpy": "2.2.6",
+    "pandas": "2.2.3",
+    "networkx": "3.4.2",
+    "matplotlib": "3.10.1",
+    "pgmpy": "1.1.2"
+  }
+}
