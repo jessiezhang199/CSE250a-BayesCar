@@ -1,7 +1,7 @@
 """E5: predict the listing price tier on the test split with exact VE and compare models.
 
 python -m prediction.run_e5
-Writes metrics, paired gains, calibration tables and figures.
+Writes metrics, paired gains, calibration tables, figures and the sensitivity analysis.
 """
 import argparse
 from importlib.metadata import version
@@ -14,6 +14,7 @@ import pandas as pd
 
 from common import MODELS, ROOT, SPLITS, TARGET, load_dags, load_split, sha256
 from parameter_learning import DiscreteBN, fit_em
+from prediction import analysis
 from prediction.core import (EVIDENCE_SETS, fit_logistic, labels, one_hot, per_row, predict_bn,
                              reliability, scores)
 from prediction.plots import calibration_figure, metric_figure
@@ -115,6 +116,7 @@ def run(output_dir=OUTPUT_DIR):
     write_settings(output_dir, cfg, selection, logistic, len(test))
     metric_figure(summary, output_dir / "e5_metrics.png")
     calibration_figure(calibration, output_dir / "e5_calibration.png")
+    analysis.run(output_dir)
 
 
 def summarize(runs):

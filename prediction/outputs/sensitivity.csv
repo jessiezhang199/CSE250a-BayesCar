@@ -1,0 +1,17 @@
+graph,setting,value,train_rows,accuracy,log_loss
+expert,pseudocount,0.1,80000,0.6486,0.7930409001420943
+expert,pseudocount,1.0,80000,0.6486,0.793782588481564
+expert,pseudocount,10.0,80000,0.6486,0.8047889089827001
+expert,pseudocount,100.0,80000,0.6486,0.8878189634843074
+expert,train_fraction,0.1,8000,0.6461,0.8108149527545501
+expert,train_fraction,0.25,20000,0.6485,0.7994170964371707
+expert,train_fraction,0.5,40000,0.6469,0.7959632155666126
+expert,train_fraction,1.0,80000,0.6486,0.793782588481564
+hill_climb_bic,pseudocount,0.1,80000,0.6721,0.7219147674661727
+hill_climb_bic,pseudocount,1.0,80000,0.6719,0.7217996116308908
+hill_climb_bic,pseudocount,10.0,80000,0.6718,0.7275076098766672
+hill_climb_bic,pseudocount,100.0,80000,0.6676,0.7636307023220384
+hill_climb_bic,train_fraction,0.1,8000,0.6679,0.737673737246853
+hill_climb_bic,train_fraction,0.25,20000,0.6682,0.727171474652926
+hill_climb_bic,train_fraction,0.5,40000,0.6706,0.7240526585121089
+hill_climb_bic,train_fraction,1.0,80000,0.6719,0.7217996116308908

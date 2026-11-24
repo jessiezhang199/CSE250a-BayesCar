@@ -11,7 +11,7 @@ python -m pytest -q prediction/tests
 python -m prediction.run_e5
 ```
 
-The run takes about three minutes and writes to `prediction/outputs/`. Pass `--output-dir /path/to/results` to write somewhere else. The outputs are deterministic.
+The run takes about 25 seconds and writes to `prediction/outputs/`. Pass `--output-dir /path/to/results` to write somewhere else. The outputs are deterministic.
 
 ## How the run works
 
@@ -20,6 +20,7 @@ The run takes about three minutes and writes to `prediction/outputs/`. Pass `--o
 - The expert and learned DAGs use Part C's EM fits for seeds 0, 1 and 2. The primary numbers come from the seed chosen in [`selection.json`](../parameter_learning/outputs/selection.json).
 - The Chow-Liu, naive Bayes and empty-graph baselines take their edges from [`dags.json`](../structure/outputs/dags.json). Each is fit by EM with Part C's settings and seeds, and its seed is picked by the same validation log-likelihood rule.
 - Logistic regression is multinomial on one-hot features, with an extra column marking a missing value. Validation log-loss picks `C` separately for each evidence set.
+- [`analysis.py`](analysis.py) refits both DAGs by EM with Dirichlet pseudocounts 0.1, 1, 10 and 100 and on 10%, 25%, 50% and 100% of the training rows (subsample seed 42, EM seed 0), and scores each fit on validation with all features. It also computes the price-tier posterior given each single feature under the selected learned DAG. `run_e5` calls it at the end, and `python -m prediction.analysis` runs it alone.
 
 ## Outputs
 
@@ -31,6 +32,8 @@ The run takes about three minutes and writes to `prediction/outputs/`. Pass `--o
 | [calibration.csv](outputs/calibration.csv) | Top-label reliability bins for the selected models |
 | [e5_metrics.png](outputs/e5_metrics.png) | Accuracy and log-loss for both evidence sets |
 | [e5_calibration.png](outputs/e5_calibration.png) | Reliability diagrams |
+| [sensitivity.csv](outputs/sensitivity.csv) | Validation accuracy and log-loss of both DAGs for each pseudocount and training size |
+| [feature_posteriors.csv](outputs/feature_posteriors.csv) | Price-tier posterior given each state of each single feature, learned DAG |
 | [settings.json](outputs/settings.json) | Evidence sets, EM settings, seed and `C` selection, Part C model hashes and package versions |
 
 [`core.py`](core.py) holds the functions other parts can reuse, such as `predict_bn` for VE predictions over a data frame, `one_hot` and `fit_logistic` for the baseline, and `scores`, `reliability` and `ece` for the metrics.
