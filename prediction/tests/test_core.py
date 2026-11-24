@@ -6,6 +6,7 @@ import pytest
 
 from common import MODELS, PREPARED, TARGET, load_dags, load_split
 from parameter_learning import DiscreteBN, fit_mle
+from prediction.analysis import feature_posteriors
 from prediction.core import (EVIDENCE_SETS, FEATURES, ece, evidence_rows, one_hot, predict_bn,
                              reliability, scores)
 from structure.bn import dag_from_edges
@@ -79,3 +80,11 @@ def test_reliability_and_ece():
     table = reliability(probs, y)
     assert table["count"].sum() == len(y)
     assert ece(probs, y) == pytest.approx((2 * abs(0.5 - 0.9) + 2 * abs(1.0 - 0.6)) / 4)
+
+
+def test_feature_posteriors_cover_every_state_and_normalize():
+    table = feature_posteriors()
+    assert len(table) == sum(CARD[f] for f in FEATURES)
+    tiers = table.filter(like="tier_").to_numpy()
+    assert tiers.shape[1] == CARD[TARGET]
+    assert np.allclose(tiers.sum(axis=1), 1)
